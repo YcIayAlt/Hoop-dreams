@@ -1,0 +1,45 @@
+-- Simply Tap the keybind dont hold :3
+
+local plr = game.Players.LocalPlayer
+_G.KeyBind = "H"
+
+for i, v in pairs(workspace.ParkGameplay.AllBaskets:GetChildren()) do
+	if v:IsA("Part") and v.Name == ("Placement") then
+
+	v.Parent = workspace
+	end
+end
+
+local goals = {}
+for _, Obj in next, game.Workspace:GetChildren() do
+	if Obj.Name == ("Placement") then
+	table.insert(goals, Obj)
+	end
+end
+
+local GoalInfo = function()
+  local goal, dist = nil, 9e9
+  
+  for _, Obj in next, goals do
+      local Magnitude = (plr.Character.HumanoidRootPart.Position - Obj.Position).Magnitude
+      
+      if dist > Magnitude then
+          goal = Obj
+      end
+  end
+  
+  return goal
+end
+
+shootingfunction = function()
+local goal = GoalInfo()
+plr.Character.Remotes.Shoot:FireServer(goal, 100, "nothing")
+end
+
+game:GetService("UserInputService").InputBegan:Connect(function(Key, gamepress)
+if not gamepress then
+	if Key.KeyCode == Enum.KeyCode[_G.KeyBind] then
+		shootingfunction()
+	end
+end	
+end)
